@@ -22,10 +22,7 @@
             // Capture the response body
             var originalBodyStream = context.Response.Body;
             string requestBody=string.Empty;    
-            using (StreamReader reader = new StreamReader(context.Request.Body))
-            {
-                 requestBody = await reader.ReadToEndAsync();
-            }
+            
 
             using (var memoryStream = new MemoryStream())
             {
@@ -39,7 +36,10 @@
                 var method = context.Request.Method;
                 var path = context.Request.Path;
                 var query = context.Request.QueryString;
-
+                using (StreamReader reader = new StreamReader(context.Request.Body))
+                {
+                    requestBody = await reader.ReadToEndAsync();
+                }
                 // Log the response
                 _logger.LogInformation($"Endpoint: {context.Request.Path}, method:{method} ,path:{path} ,query:{query} Request Body:{requestBody} Response: {responseBody}");
 
